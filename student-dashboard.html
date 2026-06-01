@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard — EduVerse</title>
+    <meta name="description"
+        content="Your EduVerse student learning hub. Enter the VR classroom, track attendance, and chat with your teacher." />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script>
+        (function () { var t = localStorage.getItem('eduverse-theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+    </script>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  NAVBAR                                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <nav class="navbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <!-- Mobile hamburger -->
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="index.html" class="navbar-logo">Edu<span>Verse</span></a>
+        </div>
+
+        <div class="navbar-actions">
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <span class="icon">🌙</span>
+                <span class="label">Dark Mode</span>
+            </button>
+            <!-- Header user display -->
+            <div
+                style="display:flex;align-items:center;gap:10px;padding:6px 16px;background:var(--bg-card);border-radius:50px;border:1px solid var(--border-color);">
+                <div id="header-initials"
+                    style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;color:#fff;flex-shrink:0;">
+                    S</div>
+                <span id="header-username"
+                    style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Student</span>
+            </div>
+            <button onclick="logoutUser()" class="btn btn-secondary btn-sm" id="logout-btn">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  DASHBOARD LAYOUT                                         -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="dashboard-page">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="sidebar" id="sidebar">
+            <!-- User info -->
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="sidebar-avatar">S</div>
+                <div>
+                    <strong id="sidebar-name">Loading…</strong>
+                    <span id="sidebar-role">Student</span>
+                </div>
+            </div>
+
+            <span class="sidebar-section-label">Navigation</span>
+
+            <div class="nav-item active" data-panel="panel-profile" id="nav-profile" tabindex="0">
+                <span class="nav-icon">👤</span> My Profile
+            </div>
+            <div class="nav-item" data-panel="panel-classroom" id="nav-classroom" tabindex="0">
+                <span class="nav-icon">🥽</span> VR Classroom
+            </div>
+            <div class="nav-item" data-panel="panel-chat" id="nav-chat" tabindex="0">
+                <span class="nav-icon">💬</span> Contact Teacher
+            </div>
+            <div class="nav-item" data-panel="panel-attendance" id="nav-attendance" tabindex="0">
+                <span class="nav-icon">✅</span> My Attendance
+            </div>
+            <div class="nav-item" data-panel="panel-progress" id="nav-progress" tabindex="0">
+                <span class="nav-icon">📈</span> Course Progress
+            </div>
+
+            <span class="sidebar-section-label" style="margin-top:auto">Account</span>
+            <div class="sidebar-logout">
+                <button onclick="logoutUser()" class="btn btn-secondary btn-full btn-sm" style="border-radius:10px;">🚪
+                    Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+        <main class="main-content">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Profile                              -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel active" id="panel-profile">
+                <h2 class="panel-title">👤 My Profile</h2>
+                <p class="panel-subtitle">Your personal information and learning overview.</p>
+
+                <!-- Profile Card -->
+                <div class="profile-section">
+
+                    <!-- Attendance Circle -->
+                    <div class="attendance-circle-wrap">
+                        <svg width="110" height="110" class="attendance-ring" viewBox="0 0 110 110" aria-hidden="true">
+                            <circle class="ring-bg" cx="55" cy="55" r="40" />
+                            <circle class="ring-fill" cx="55" cy="55" r="40" />
+                        </svg>
+                        <!-- Percentage overlaid via absolute positioning -->
+                        <div style="margin-top:-74px;font-size:1.3rem;font-weight:800;color:var(--color-primary);text-align:center;"
+                            id="attendance-pct">—</div>
+                        <div style="margin-top:36px;" class="circle-label">Attendance</div>
+                    </div>
+
+                    <!-- Profile Details -->
+                    <div class="profile-info">
+                        <div id="profile-avatar"
+                            style="width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:800;color:#fff;margin-bottom:12px;">
+                            S</div>
+                        <h2 id="student-name">Loading…</h2>
+                        <div class="profile-badge">🎓 <span id="student-course">—</span></div>
+                        <div class="profile-meta">
+                            <div class="profile-meta-item">📅 <span id="student-year">—</span></div>
+                            <div class="profile-meta-item">✉️ <span id="student-email">—</span></div>
+                            <div class="profile-meta-item">📊 <span id="attendance-count">0 / 0 classes</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick stats -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-card-label">Sessions Attended</div>
+                        <div class="info-card-value" id="stat-sessions">0</div>
+                        <div class="info-card-sub">this semester</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Topics Completed</div>
+                        <div class="info-card-value">3</div>
+                        <div class="info-card-sub">out of 8 topics</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Next Session</div>
+                        <div class="info-card-value" style="font-size:1rem;">Tomorrow</div>
+                        <div class="info-card-sub">3:00 PM</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Chat Messages</div>
+                        <div class="info-card-value">12</div>
+                        <div class="info-card-sub">with teacher</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: VR Classroom                         -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-classroom">
+                <h2 class="panel-title">🥽 VR Classroom</h2>
+                <p class="panel-subtitle">Enter your join code to enter the live virtual session.</p>
+
+                <!-- ── JOIN CODE CARD ─────────────────────────────── -->
+                <div class="panel-card" id="join-card" style="margin-bottom:20px">
+                    <h3>🔑 Enter Classroom Join Code</h3>
+                    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px">
+                        Ask your teacher for the 6-character code to enter today's session.
+                    </p>
+                    <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap">
+                        <input type="text" id="join-code-input" maxlength="6" placeholder="e.g. BX9K3M" style="flex:1;min-width:180px;padding:14px 18px;
+                                   border-radius:12px;border:1.5px solid var(--border-color);
+                                   background:var(--input-bg);color:var(--text-primary);
+                                   font-family:'Orbitron',monospace;font-size:1.1rem;
+                                   font-weight:700;letter-spacing:0.25em;text-transform:uppercase;outline:none;
+                                   transition:border-color 0.2s;" />
+                        <button class="btn btn-primary" id="join-btn"
+                            style="padding:14px 28px;font-size:0.95rem;white-space:nowrap">
+                            Enter Classroom →
+                        </button>
+                    </div>
+                    <div class="form-error" id="join-error" style="margin-top:10px"></div>
+                </div>
+
+                <!-- ── JOINED CLASSROOM INFO (hidden until joined) ── -->
+                <div id="joined-info" style="display:none;margin-bottom:20px">
+                    <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;
+                                background:linear-gradient(135deg,rgba(0,207,255,0.08),rgba(139,92,246,0.08));
+                                border:1px solid rgba(0,207,255,0.2);border-radius:14px;flex-wrap:wrap">
+                        <div
+                            style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+                                    display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">
+                            ✅</div>
+                        <div>
+                            <div style="font-weight:700;font-size:0.95rem;color:var(--text-primary)"
+                                id="joined-subject">Biology</div>
+                            <div style="font-size:0.8rem;color:var(--text-muted)" id="joined-topic">Welcome Session
+                            </div>
+                        </div>
+                        <span class="badge badge-success" style="margin-left:auto">Joined ✓</span>
+                    </div>
+                </div>
+
+                <div class="vr-classroom">
+                    <!-- Header bar -->
+                    <div class="vr-header">
+                        <h3 id="vr-subject">📚 General Science</h3>
+                        <div class="live-badge">
+                            <div class="live-dot"></div> LIVE
+                        </div>
+                    </div>
+
+                    <!-- Main VR body -->
+                    <div class="vr-body">
+                        <!-- 3D VR Room -->
+                        <div class="vr-room">
+                            <div class="vr-teacher-area">
+                                <!-- Teacher video placeholder -->
+                                <div class="vr-video-placeholder" id="vr-video">
+                                    <div class="teacher-icon">👩‍🏫</div>
+                                    <div>Teacher's Video Feed</div>
+                                    <div style="font-size:0.72rem;color:inherit;opacity:0.6;margin-top:4px">Connecting…
+                                    </div>
+                                </div>
+                                <!-- Current topic -->
+                                <div class="vr-topic">📖 Topic: <span id="vr-topic">Welcome Session</span></div>
+                                <div id="vr-schedule"
+                                    style="color:rgba(0,207,255,0.6);font-size:0.75rem;margin-top:6px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Live Chat -->
+                        <div class="chat-panel">
+                            <div class="chat-header">💬 Session Chat</div>
+                            <div class="chat-messages" id="chat-messages">
+                                <!-- Messages loaded by JS -->
+                            </div>
+                            <div class="chat-input-row">
+                                <input type="text" id="chat-input" placeholder="Ask a question…" autocomplete="off" />
+                                <button class="send-btn" id="send-btn" aria-label="Send">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Session info cards -->
+                <div class="info-cards" style="margin-top:20px">
+                    <div class="info-card">
+                        <div class="info-card-label">Today's Topic</div>
+                        <div class="info-card-value" style="font-size:1.1rem;" id="info-topic">Cell Division</div>
+                        <div class="info-card-sub">Chapter 3</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Duration</div>
+                        <div class="info-card-value">45</div>
+                        <div class="info-card-sub">minutes</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Students Online</div>
+                        <div class="info-card-value" id="students-online-count">24</div>
+                        <div class="info-card-sub">in this session</div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Contact Teacher                       -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-chat">
+                <h2 class="panel-title">💬 Contact Teacher</h2>
+                <p class="panel-subtitle">Send doubts and messages directly to your teacher.</p>
+
+                <!-- AI Doubt Assistant badge -->
+                <div
+                    style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:50px;background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(0,207,255,0.1));border:1px solid rgba(139,92,246,0.2);font-size:0.82rem;font-weight:600;color:var(--color-secondary);margin-bottom:20px;">
+                    ✨ AI Doubt Assistant — Coming Soon
+                </div>
+
+                <div class="standalone-chat">
+                    <div class="chat-header" style="padding:16px 20px;font-size:0.95rem;">
+                        👩‍🏫 Chat with Your Teacher
+                    </div>
+
+                    <!-- Re-use same chat messages + input boxes but in standalone layout -->
+                    <div class="chat-messages" id="teacher-standalone-messages" style="max-height:480px">
+                        <!-- Pre-load a welcome message -->
+                        <div class="chat-msg received">
+                            👋 Hello! Feel free to ask any questions here. I'm available Mon–Fri, 9AM–6PM.
+                            <div class="msg-time">9:00 AM</div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-row" style="padding:16px">
+                        <input type="text" id="doubt-input" placeholder="Type your doubt or question…"
+                            autocomplete="off" />
+                        <button class="send-btn" id="doubt-send" aria-label="Send">➤</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Attendance                            -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-attendance">
+                <h2 class="panel-title">✅ My Attendance</h2>
+                <p class="panel-subtitle">Your attendance is recorded every time you join a classroom via a Join Code.
+                </p>
+
+                <!-- Attendance circle (large) -->
+                <div class="panel-card" style="text-align:center;max-width:400px;margin:0 auto 24px;">
+                    <svg width="160" height="160" class="attendance-ring" viewBox="0 0 160 160"
+                        aria-label="Attendance circle">
+                        <circle class="ring-bg" cx="80" cy="80" r="64" />
+                        <circle class="ring-fill" cx="80" cy="80" r="64"
+                            style="stroke-dasharray:402;stroke-dashoffset:402;" id="big-ring" />
+                    </svg>
+                    <div style="margin-top:-100px;font-size:2rem;font-weight:800;color:var(--color-primary);text-align:center;"
+                        id="big-pct">—</div>
+                    <div style="margin-top:56px;font-weight:600;color:var(--text-secondary);font-size:0.9rem;"
+                        id="big-count">0 / 0 classes attended</div>
+                    <p style="margin-top:12px;font-size:0.82rem;color:var(--text-muted);">✨ Enter a Classroom Join Code
+                        on the <strong>VR Classroom</strong> panel to have today's attendance recorded.</p>
+                </div>
+
+                <!-- Attendance status info -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-card-label">Status</div>
+                        <div class="info-card-value" style="font-size:1.2rem;color:#10B981" id="att-status">Good</div>
+                        <div class="info-card-sub">Required: 75%+</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">This Month</div>
+                        <div class="info-card-value" id="att-month">—</div>
+                        <div class="info-card-sub">days present</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Streak</div>
+                        <div class="info-card-value">🔥 3</div>
+                        <div class="info-card-sub">consecutive days</div>
+                    </div>
+                </div>
+
+                <!-- Recent attendance history (loaded by dashboard.js) -->
+                <div class="panel-card" style="margin-top:20px">
+                    <h3 style="margin-bottom:14px">📋 Recent Session History</h3>
+                    <div id="attendance-history" style="display:flex;flex-direction:column;gap:10px">
+                        <div style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:16px">Loading
+                            your attendance records…</div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Course Progress                       -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-progress">
+                <h2 class="panel-title">📈 Course Progress</h2>
+                <p class="panel-subtitle">Track how far you've come through the curriculum.</p>
+
+                <!-- Progress bars — populated by JS -->
+                <div id="progress-list" class="progress-list"></div>
+
+                <!-- Upcoming sessions -->
+                <div class="panel-card" style="margin-top:24px">
+                    <h3>📅 Upcoming Sessions</h3>
+                    <div id="upcoming-sessions">
+                        <div class="exam-item reveal">
+                            <div class="exam-date">
+                                <div>MAR</div><strong>05</strong>
+                            </div>
+                            <div style="flex:1">
+                                <div style="font-weight:700;color:var(--text-primary)">Cell Division — Part 2</div>
+                                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:3px">⏰ 3:00 PM — 4:00
+                                    PM</div>
+                            </div>
+                            <span class="badge badge-success">Upcoming</span>
+                        </div>
+                        <div class="exam-item reveal">
+                            <div class="exam-date">
+                                <div>MAR</div><strong>08</strong>
+                            </div>
+                            <div style="flex:1">
+                                <div style="font-weight:700;color:var(--text-primary)">Genetics Introduction</div>
+                                <div style="font-size:0.82rem;color:var(--text-muted);margin-top:3px">⏰ 3:00 PM — 4:30
+                                    PM</div>
+                            </div>
+                            <span class="badge badge-warning">Soon</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // ── Bootstrap the student dashboard ──────────────────────
+        initStudentDashboard();
+
+        // ── Standalone doubt chat (Contact Teacher panel) ─────────
+        document.addEventListener('DOMContentLoaded', function () {
+            var input = document.getElementById('doubt-input');
+            var sendBtn = document.getElementById('doubt-send');
+            var msgs = document.getElementById('teacher-standalone-messages');
+
+            function send() {
+                var text = (input.value || '').trim();
+                if (!text) return;
+                var div = document.createElement('div');
+                div.className = 'chat-msg sent';
+                div.innerHTML = text + '<div class="msg-time">Now</div>';
+                msgs.appendChild(div);
+                msgs.scrollTop = msgs.scrollHeight;
+                input.value = '';
+
+                // Simulate teacher reply after 1.5s
+                setTimeout(function () {
+                    var reply = document.createElement('div');
+                    reply.className = 'chat-msg received';
+                    reply.innerHTML = '👩‍🏫 Thanks for your question! I\'ll address this in our next session. 📝<div class="msg-time">Now</div>';
+                    msgs.appendChild(reply);
+                    msgs.scrollTop = msgs.scrollHeight;
+                }, 1500);
+            }
+
+            if (sendBtn) sendBtn.addEventListener('click', send);
+            if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
+
+            // ── Sync big attendance circle with profile circle ────────
+            // Called after dashboard.js has written attendance data to DOM
+            setTimeout(function () {
+                var bigRing = document.getElementById('big-ring');
+                var bigPct = document.getElementById('big-pct');
+                var bigCnt = document.getElementById('big-count');
+                var profilePct = document.getElementById('attendance-pct');
+                var profileCnt = document.getElementById('attendance-count');
+                var attMonth = document.getElementById('att-month');
+                var attStatus = document.getElementById('att-status');  // ✅ fixed spelling
+                var statSess = document.getElementById('stat-sessions');
+
+                var sync = function () {
+                    if (!profilePct || !bigPct) return;
+                    var pctNum = parseInt(profilePct.textContent) || 0;
+
+                    // Update big ring text
+                    bigPct.textContent = profilePct.textContent;
+                    if (bigCnt) bigCnt.textContent = profileCnt ? profileCnt.textContent : '';
+
+                    // Animate big ring (r=64, circumference=402)
+                    if (bigRing) bigRing.style.strokeDashoffset = 402 - (pctNum / 100) * 402;
+
+                    // ✅ Month days = rough estimate (pct * 0.3 gives ~days in 30-day month)
+                    if (attMonth) attMonth.textContent = Math.round(pctNum * 0.3) || '—';
+
+                    // ✅ Status label
+                    if (attStatus) {
+                        attStatus.textContent = pctNum >= 75 ? 'Good ✅' : pctNum >= 50 ? 'At Risk ⚠️' : 'Low ❌';
+                        attStatus.style.color = pctNum >= 75 ? '#10B981' : pctNum >= 50 ? '#F59E0B' : '#EF4444';
+                    }
+
+                    // Sessions attended card (profile panel)
+                    if (statSess) statSess.textContent = profileCnt
+                        ? (profileCnt.textContent.split('/')[0] || '0').trim()
+                        : '0';
+                };
+
+                // Run sync once after 1 second (lets Firebase/localStorage writes settle)
+                setTimeout(sync, 1000);
+            }, 500);
+        });
+    </script>
+</body>
+
+</html>

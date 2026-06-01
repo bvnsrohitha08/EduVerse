@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up — EduVerse</title>
+    <meta name="description"
+        content="Create your EduVerse account as a Student or Teacher and join the virtual classroom revolution." />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script>
+        (function () { var t = localStorage.getItem('eduverse-theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+    </script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Edu<span>Verse</span></a>
+        <div class="navbar-actions">
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <span class="icon">🌙</span>
+                <span class="label">Dark Mode</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Signup Page -->
+    <div class="auth-page" id="signup-page">
+        <div class="auth-card" style="max-width:520px">
+            <!-- Logo -->
+            <div class="auth-logo">Edu<span>Verse</span></div>
+            <p class="auth-subtitle">Create your account and start your VR learning journey.</p>
+
+            <!-- Role Tabs -->
+            <div class="role-tabs" id="role-tabs" role="tablist">
+                <button class="role-tab active" id="tab-student" data-role="student" role="tab" aria-selected="true">
+                    🎓 I'm a Student
+                </button>
+                <button class="role-tab" id="tab-teacher" data-role="teacher" role="tab" aria-selected="false">
+                    👩‍🏫 I'm a Teacher
+                </button>
+            </div>
+
+            <!-- ── Student Signup Form ── -->
+            <form id="student-form" novalidate>
+                <div class="form-group">
+                    <label for="s-name">Full Name</label>
+                    <input type="text" id="s-name" placeholder="Aarav Mehta" autocomplete="name" required />
+                </div>
+                <div class="form-group">
+                    <label for="s-email">Email Address</label>
+                    <input type="email" id="s-email" placeholder="aarav@example.com" autocomplete="email" required />
+                </div>
+                <div class="form-group">
+                    <label for="s-pass">Password <small style="color:var(--text-muted)">(min 6 chars)</small></label>
+                    <input type="password" id="s-pass" placeholder="Create a strong password"
+                        autocomplete="new-password" required />
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="s-course">Course</label>
+                        <select id="s-course" required>
+                            <option value="" disabled selected>Select course</option>
+                            <option>Biology</option>
+                            <option>Maths</option>
+                            <option>Chemistry</option>
+                            <option>Physics</option>
+                            <option>Computer Science</option>
+                            <option>History</option>
+                            <option>English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="s-year">Year of Study</label>
+                        <select id="s-year" required>
+                            <option value="" disabled selected>Select year</option>
+                            <option>Year 1</option>
+                            <option>Year 2</option>
+                            <option>Year 3</option>
+                            <option>Year 4</option>
+                            <option>Year 5</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-error" id="student-error" role="alert"></div>
+
+                <button type="submit" class="btn btn-primary btn-full" id="student-submit-btn">
+                    Create Student Account →
+                </button>
+            </form>
+
+            <!-- ── Teacher Signup Form (hidden by default) ── -->
+            <form id="teacher-form" style="display:none" novalidate>
+                <div class="form-group">
+                    <label for="t-name">Full Name</label>
+                    <input type="text" id="t-name" placeholder="Dr. Priya Sharma" autocomplete="name" required />
+                </div>
+                <div class="form-group">
+                    <label for="t-email">Email Address</label>
+                    <input type="email" id="t-email" placeholder="priya@example.com" autocomplete="email" required />
+                </div>
+                <div class="form-group">
+                    <label for="t-pass">Password <small style="color:var(--text-muted)">(min 6 chars)</small></label>
+                    <input type="password" id="t-pass" placeholder="Create a strong password"
+                        autocomplete="new-password" required />
+                </div>
+                <div class="form-group">
+                    <label for="t-subject">Subject Expertise</label>
+                    <select id="t-subject" required>
+                        <option value="" disabled selected>Select subject</option>
+                        <option>Biology</option>
+                        <option>Maths</option>
+                        <option>Chemistry</option>
+                        <option>Physics</option>
+                        <option>Computer Science</option>
+                        <option>History</option>
+                        <option>English</option>
+                        <option>General Science</option>
+                    </select>
+                </div>
+
+                <div class="form-error" id="teacher-error" role="alert"></div>
+
+                <button type="submit" class="btn btn-accent btn-full" id="teacher-submit-btn">
+                    Create Teacher Account →
+                </button>
+            </form>
+
+            <div class="auth-switch">
+                Already have an account? <a href="login.html">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        var activeRole = 'student';
+        var studentForm = document.getElementById('student-form');
+        var teacherForm = document.getElementById('teacher-form');
+        var tabs = document.getElementById('role-tabs');
+
+        // ── Role tab switching ───────────────────────────────────
+        tabs.addEventListener('click', function (e) {
+            var btn = e.target.closest('.role-tab');
+            if (!btn) return;
+            activeRole = btn.dataset.role;
+
+            document.querySelectorAll('.role-tab').forEach(function (b) {
+                b.classList.toggle('active', b.dataset.role === activeRole);
+                b.setAttribute('aria-selected', b.dataset.role === activeRole);
+            });
+
+            studentForm.style.display = (activeRole === 'student') ? '' : 'none';
+            teacherForm.style.display = (activeRole === 'teacher') ? '' : 'none';
+
+            // Clear errors
+            ['student-error', 'teacher-error'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) { el.textContent = ''; el.classList.remove('show'); }
+            });
+        });
+
+        // ── Helper: show error ────────────────────────────────────
+        function showError(id, msg) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function clearError(id) {
+            var el = document.getElementById(id);
+            if (el) { el.textContent = ''; el.classList.remove('show'); }
+        }
+
+        // ── Student Form Submit ──────────────────────────────────
+        studentForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearError('student-error');
+
+            var name = document.getElementById('s-name').value.trim();
+            var email = document.getElementById('s-email').value.trim();
+            var pass = document.getElementById('s-pass').value;
+            var course = document.getElementById('s-course').value;
+            var year = document.getElementById('s-year').value;
+            var btn = document.getElementById('student-submit-btn');
+
+            if (!name || !email || !pass || !course || !year) {
+                showError('student-error', 'Please fill in all fields.');
+                return;
+            }
+
+            btn.textContent = 'Creating account…';
+            btn.disabled = true;
+
+            try {
+                await signupStudent(name, email, pass, course, year);
+                // Redirect handled inside signupStudent()
+            } catch (err) {
+                showError('student-error', err.message);
+                btn.textContent = 'Create Student Account →';
+                btn.disabled = false;
+            }
+        });
+
+        // ── Teacher Form Submit ──────────────────────────────────
+        teacherForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearError('teacher-error');
+
+            var name = document.getElementById('t-name').value.trim();
+            var email = document.getElementById('t-email').value.trim();
+            var pass = document.getElementById('t-pass').value;
+            var subject = document.getElementById('t-subject').value;
+            var btn = document.getElementById('teacher-submit-btn');
+
+            if (!name || !email || !pass || !subject) {
+                showError('teacher-error', 'Please fill in all fields.');
+                return;
+            }
+
+            btn.textContent = 'Creating account…';
+            btn.disabled = true;
+
+            try {
+                await signupTeacher(name, email, pass, subject);
+                // Redirect handled inside signupTeacher()
+            } catch (err) {
+                showError('teacher-error', err.message);
+                btn.textContent = 'Create Teacher Account →';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

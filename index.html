@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduVerse — Step Into the Future of Learning</title>
+  <meta name="description" content="EduVerse is an immersive Virtual Reality Classroom Experience platform. Attend live VR classes, track attendance, and interact with teachers — no headset required." />
+  <link rel="stylesheet" href="css/styles.css" />
+  <!-- Apply theme before page paint to prevent flash -->
+  <script>
+    (function(){var t=localStorage.getItem('eduverse-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  NAVBAR                                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<nav class="navbar" id="navbar">
+  <a href="index.html" class="navbar-logo">Edu<span>Verse</span></a>
+
+  <ul class="navbar-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+  </ul>
+
+  <div class="navbar-actions">
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+      <span class="icon">🌙</span>
+      <span class="label">Dark Mode</span>
+    </button>
+    <a href="login.html" class="btn btn-secondary btn-sm">Log In</a>
+    <a href="signup.html" class="btn btn-primary btn-sm">Sign Up</a>
+  </div>
+
+  <!-- Mobile hamburger -->
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  HERO SECTION                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+
+  <!-- Neon star particles (visible in dark mode only) -->
+  <div class="stars-bg" id="stars-bg" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <!-- Badge -->
+    <div class="hero-badge">
+      <span>🚀</span> Next-Gen Virtual Learning Platform
+    </div>
+
+    <!-- Heading -->
+    <h1>
+      Step Into the <span class="highlight">Future of Learning</span> —&nbsp;Virtually
+    </h1>
+
+    <!-- Subtext -->
+    <p>
+      EduVerse simulates an immersive classroom experience entirely in your browser.
+      Attend live sessions, interact in real time, get your attendance tracked automatically —
+      no VR headset needed.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div class="hero-buttons">
+      <a href="login.html?role=student" class="btn btn-primary" id="hero-student-btn">
+        🎓 Student Login
+      </a>
+      <a href="login.html?role=teacher" class="btn btn-accent" id="hero-teacher-btn">
+        👩‍🏫 Teacher Login
+      </a>
+      <a href="signup.html" class="btn btn-secondary" id="hero-getstarted-btn">
+        Get Started Free
+      </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>10K+</strong>
+        <span>Active Students</span>
+      </div>
+      <div class="hero-stat">
+        <strong>500+</strong>
+        <span>Live Classrooms</span>
+      </div>
+      <div class="hero-stat">
+        <strong>98%</strong>
+        <span>Satisfaction Rate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  FEATURES SECTION                                         -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="features">
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Why EduVerse</span>
+      <h2 class="section-title">Everything You Need for Immersive Learning</h2>
+      <p class="section-sub">Powerful tools designed for students and teachers — built for the future.</p>
+    </div>
+
+    <div class="features-grid">
+
+      <!-- Card 1 -->
+      <div class="feature-card reveal" id="feat-vr">
+        <div class="feature-icon">🥽</div>
+        <h3>Immersive VR Simulation</h3>
+        <p>Experience a fully simulated 3D classroom with animated backgrounds and CSS 3D transforms — zero hardware needed.</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="feature-card reveal" id="feat-realtime">
+        <div class="feature-icon">⚡</div>
+        <h3>Real-Time Interaction</h3>
+        <p>Live chat, instant question-answer, and teacher broadcasts keep every session dynamic and engaging.</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="feature-card reveal" id="feat-attendance">
+        <div class="feature-icon">✅</div>
+        <h3>Automatic Attendance</h3>
+        <p>Students are marked present automatically the moment they log in. Teachers get a live attendance dashboard.</p>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="feature-card reveal" id="feat-doubt">
+        <div class="feature-icon">💬</div>
+        <h3>Doubt Clarification Chat</h3>
+        <p>Students can send doubts directly to teachers in real time. Every message is stored and tracked via Firestore.</p>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="feature-card reveal" id="feat-data">
+        <div class="feature-icon">📶</div>
+        <h3>Low Data Optimization</h3>
+        <p>Designed to work on slow connections with lightweight assets, smart caching, and no heavy video streams.</p>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="feature-card reveal" id="feat-progress">
+        <div class="feature-icon">📈</div>
+        <h3>Progress Tracking</h3>
+        <p>Visual progress bars for each course topic let students see exactly how far they've come at a glance.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  HOW IT WORKS SECTION                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section class="how-it-works-bg" id="how-it-works">
+  <div class="section-header" style="max-width:1100px;margin:0 auto 60px;padding:0 40px;">
+    <span class="section-tag">Process</span>
+    <h2 class="section-title">How EduVerse Works</h2>
+    <p class="section-sub">Four simple steps from classroom creation to automatic attendance recording.</p>
+  </div>
+
+  <div class="steps-grid">
+
+    <div class="step-card reveal" id="step-1">
+      <div class="step-number">1</div>
+      <h3>Teacher Creates Classroom</h3>
+      <p>Teacher sets up a session with subject, topic, and schedule. A unique join code is generated instantly.</p>
+    </div>
+
+    <div class="step-card reveal" id="step-2">
+      <div class="step-number">2</div>
+      <h3>Student Joins Session</h3>
+      <p>Student logs in with their credentials and enters the virtual classroom using the join code or dashboard.</p>
+    </div>
+
+    <div class="step-card reveal" id="step-3">
+      <div class="step-number">3</div>
+      <h3>Interactive Teaching</h3>
+      <p>Teacher broadcasts the topic. Students ask questions via live chat. The VR environment keeps everyone engaged.</p>
+    </div>
+
+    <div class="step-card reveal" id="step-4">
+      <div class="step-number">4</div>
+      <h3>Attendance Auto-Recorded</h3>
+      <p>Login timestamps are saved to Firestore automatically. Teachers see date-wise records and percentage reports.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  TESTIMONIALS                                             -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<section id="testimonials">
+  <div class="section">
+    <div class="section-header">
+      <span class="section-tag">Testimonials</span>
+      <h2 class="section-title">Loved by Students &amp; Teachers</h2>
+      <p class="section-sub">Here's what our early users are saying about the EduVerse experience.</p>
+    </div>
+
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card reveal" id="testi-1">
+        <div class="testimonial-stars">★★★★★</div>
+        <p>"EduVerse made it feel like I was actually sitting in a real classroom. The VR simulation and live chat kept me focused the whole time."</p>
+        <div class="testimonial-author">
+          <div class="avatar">A</div>
+          <div>
+            <strong>Aarav Mehta</strong>
+            <span>Biology Student, Year 2</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" id="testi-2">
+        <div class="testimonial-stars">★★★★★</div>
+        <p>"The automatic attendance system saves me hours every week. I can focus entirely on teaching instead of taking roll calls."</p>
+        <div class="testimonial-author">
+          <div class="avatar">P</div>
+          <div>
+            <strong>Priya Sharma</strong>
+            <span>Chemistry Teacher</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal" id="testi-3">
+        <div class="testimonial-stars">★★★★☆</div>
+        <p>"I love the dark mode UI — it feels like a real futuristic learning hub. The doubt chat feature is a game-changer for remote education."</p>
+        <div class="testimonial-author">
+          <div class="avatar">R</div>
+          <div>
+            <strong>Rohan Kapoor</strong>
+            <span>Maths Student, Year 3</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  FOOTER                                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="navbar-logo" style="font-size:1.4rem">Edu<span>Verse</span></div>
+      <p>An immersive Virtual Reality Classroom Experience platform — bringing the future of education to every browser.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Platform</h4>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="signup.html">Get Started</a>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <a href="login.html">Login</a>
+      <a href="signup.html">Sign Up</a>
+      <a href="student-dashboard.html">Student Dashboard</a>
+      <a href="teacher-dashboard.html">Teacher Dashboard</a>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Contact</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 EduVerse. All rights reserved.</span>
+    <span>Built with ❤️ for the future of education</span>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--  SCRIPTS                                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+
+<!-- Theme JS (no Firebase dependency) -->
+<script src="js/theme.js"></script>
+
+<!-- Landing page scripts -->
+<script>
+  // ── Generate star particles for dark mode ─────────────────
+  (function () {
+    var bg = document.getElementById('stars-bg');
+    if (!bg) return;
+    for (var i = 0; i < 120; i++) {
+      var star = document.createElement('div');
+      star.className = 'star';
+      star.style.cssText = [
+        'top:'              + Math.random() * 100 + '%',
+        'left:'             + Math.random() * 100 + '%',
+        'animation-delay:'  + Math.random() * 4    + 's',
+        'animation-duration:' + (2 + Math.random() * 3) + 's',
+        'opacity:'          + Math.random()
+      ].join(';');
+      bg.appendChild(star);
+    }
+  })();
+
+  // ── Scroll-reveal for landing sections ───────────────────
+  (function () {
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
+      return;
+    }
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+  })();
+
+  // ── Navbar scroll effect ──────────────────────────────────
+  window.addEventListener('scroll', function () {
+    var nb = document.getElementById('navbar');
+    if (nb) nb.style.boxShadow = window.scrollY > 20 ? 'var(--shadow-md)' : 'var(--shadow-sm)';
+  });
+
+  // ── Mobile nav hamburger ──────────────────────────────────
+  document.getElementById('hamburger').addEventListener('click', function () {
+    document.querySelector('.navbar-links').style.display =
+      document.querySelector('.navbar-links').style.display === 'flex' ? 'none' : 'flex';
+  });
+</script>
+
+</body>
+</html>

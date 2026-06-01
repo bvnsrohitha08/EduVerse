@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teacher Dashboard — EduVerse</title>
+    <meta name="description"
+        content="Manage your EduVerse virtual classroom — create sessions, track attendance, manage syllabus, and chat with students." />
+    <link rel="stylesheet" href="css/styles.css" />
+    <script>
+        (function () { var t = localStorage.getItem('eduverse-theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+    </script>
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  NAVBAR                                                  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <nav class="navbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="index.html" class="navbar-logo">Edu<span>Verse</span></a>
+        </div>
+
+        <div class="navbar-actions">
+            <button class="theme-toggle" aria-label="Toggle theme">
+                <span class="icon">🌙</span>
+                <span class="label">Dark Mode</span>
+            </button>
+            <div
+                style="display:flex;align-items:center;gap:10px;padding:6px 16px;background:var(--bg-card);border-radius:50px;border:1px solid var(--border-color);">
+                <div id="header-initials"
+                    style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--color-secondary),var(--color-primary));display:flex;align-items:center;justify-content:center;font-size:0.9rem;font-weight:700;color:#fff;flex-shrink:0;">
+                    T</div>
+                <span id="header-username"
+                    style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Teacher</span>
+            </div>
+            <button onclick="logoutUser()" class="btn btn-secondary btn-sm" id="logout-btn">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!--  DASHBOARD LAYOUT                                         -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <div class="dashboard-page">
+
+        <!-- ── SIDEBAR ── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-user">
+                <div class="sidebar-avatar" id="sidebar-avatar">T</div>
+                <div>
+                    <strong id="sidebar-name">Loading…</strong>
+                    <span id="sidebar-role">Teacher</span>
+                </div>
+            </div>
+
+            <span class="sidebar-section-label">Classroom</span>
+
+            <div class="nav-item active" data-panel="panel-create" id="nav-create" tabindex="0">
+                <span class="nav-icon">➕</span> Create Classroom
+            </div>
+            <div class="nav-item" data-panel="panel-session" id="nav-session" tabindex="0">
+                <span class="nav-icon">📡</span> Live Session
+            </div>
+            <div class="nav-item" data-panel="panel-attendance" id="nav-attendance" tabindex="0">
+                <span class="nav-icon">✅</span> Attendance
+            </div>
+
+            <span class="sidebar-section-label">Content</span>
+
+            <div class="nav-item" data-panel="panel-syllabus" id="nav-syllabus" tabindex="0">
+                <span class="nav-icon">📚</span> Syllabus
+            </div>
+            <div class="nav-item" data-panel="panel-exams" id="nav-exams" tabindex="0">
+                <span class="nav-icon">📝</span> Exam Schedule
+            </div>
+            <div class="nav-item" data-panel="panel-chat" id="nav-chat" tabindex="0">
+                <span class="nav-icon">💬</span> Student Chat
+            </div>
+
+            <div class="sidebar-logout" style="margin-top:auto">
+                <button onclick="logoutUser()" class="btn btn-secondary btn-full btn-sm" style="border-radius:10px;">🚪
+                    Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- ── MAIN CONTENT ── -->
+        <main class="main-content">
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Create Classroom                      -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel active" id="panel-create">
+                <h2 class="panel-title">➕ Create Classroom</h2>
+                <p class="panel-subtitle">Set up a new virtual session and share the join code with students.</p>
+
+                <!-- Quick Stats -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-card-label">Classrooms Created</div>
+                        <div class="info-card-value">4</div>
+                        <div class="info-card-sub">all time</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Active Students</div>
+                        <div class="info-card-value">28</div>
+                        <div class="info-card-sub">enrolled</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Next Session</div>
+                        <div class="info-card-value" style="font-size:1rem">Tomorrow</div>
+                        <div class="info-card-sub">3:00 PM</div>
+                    </div>
+                </div>
+
+                <!-- Create Form -->
+                <div class="panel-card">
+                    <h3>🏫 New Classroom Details</h3>
+                    <form id="classroom-form" novalidate>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cls-subject">Subject Name</label>
+                                <select id="cls-subject" required>
+                                    <option value="" disabled selected>Select subject</option>
+                                    <option>Biology</option>
+                                    <option>Maths</option>
+                                    <option>Chemistry</option>
+                                    <option>Physics</option>
+                                    <option>Computer Science</option>
+                                    <option>History</option>
+                                    <option>English</option>
+                                    <option>General Science</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cls-schedule">Schedule Date &amp; Time</label>
+                                <input type="datetime-local" id="cls-schedule" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cls-topic">Session Topic</label>
+                            <input type="text" id="cls-topic" placeholder="e.g. Cell Division, Algebra Basics…"
+                                required />
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="create-cls-btn" style="margin-top:4px">
+                            🚀 Create Classroom &amp; Generate Code
+                        </button>
+                    </form>
+
+                    <!-- Join Code Display (hidden until created) -->
+                    <div id="code-display" style="display:none;margin-top:24px">
+                        <div class="join-code-display">
+                            <div>
+                                <div
+                                    style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin-bottom:6px;">
+                                    Join Code</div>
+                                <div class="join-code-value" id="join-code-value">——</div>
+                            </div>
+                            <div style="text-align:right">
+                                <button class="btn btn-sm btn-secondary" onclick="copyCode()" id="copy-btn">📋 Copy
+                                    Code</button>
+                                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">Share with
+                                    students</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Live Session                          -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-session">
+                <h2 class="panel-title">📡 Live Session</h2>
+                <p class="panel-subtitle">Start a live session and monitor students joining in real time.</p>
+
+                <div style="display:grid;grid-template-columns:1fr 360px;gap:24px">
+
+                    <!-- Session Control -->
+                    <div class="panel-card" style="margin-bottom:0">
+                        <h3>🎛️ Session Controls</h3>
+                        <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
+                            <button class="btn btn-primary" id="start-session-btn" onclick="toggleSession(this)">
+                                ▶ Start Session
+                            </button>
+                            <button class="btn btn-secondary" id="end-session-btn" disabled>
+                                ⏹ End Session
+                            </button>
+                        </div>
+
+                        <!-- Teacher broadcast area -->
+                        <div class="vr-room" style="border-radius:16px;min-height:200px">
+                            <div class="vr-teacher-area">
+                                <div class="vr-video-placeholder" style="width:220px;height:140px">
+                                    <div class="teacher-icon">📡</div>
+                                    <div>Your Broadcast</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Students joined list -->
+                        <div style="margin-top:20px">
+                            <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-primary);margin-bottom:14px;">
+                                👥 Students Online (demo)</h3>
+                            <div id="students-online">
+                                <div class="syllabus-item">
+                                    <div class="avatar" style="width:36px;height:36px;font-size:0.9rem">A</div>
+                                    <span style="flex:1;font-size:0.88rem;color:var(--text-primary)">Aarav Mehta</span>
+                                    <span class="badge badge-success">Online</span>
+                                </div>
+                                <div class="syllabus-item">
+                                    <div class="avatar" style="width:36px;height:36px;font-size:0.9rem">P</div>
+                                    <span style="flex:1;font-size:0.88rem;color:var(--text-primary)">Priya Kapoor</span>
+                                    <span class="badge badge-success">Online</span>
+                                </div>
+                                <div class="syllabus-item">
+                                    <div class="avatar"
+                                        style="width:36px;height:36px;font-size:0.9rem;background:linear-gradient(135deg,#F59E0B,#EF4444)">
+                                        R</div>
+                                    <span style="flex:1;font-size:0.88rem;color:var(--text-primary)">Rohan Singh</span>
+                                    <span class="badge badge-warning">Late</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Session Chat -->
+                    <div class="standalone-chat" style="margin-bottom:0">
+                        <div class="chat-header" style="padding:16px 20px">💬 Session Chat</div>
+                        <div class="chat-messages" id="teacher-chat-messages" style="max-height:400px">
+                            <div class="chat-msg received">
+                                🎓 Aarav: Can you explain this again?<div class="msg-time">Now</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-row" style="padding:12px 14px">
+                            <input type="text" id="teacher-chat-input" placeholder="Broadcast to all students…"
+                                autocomplete="off" />
+                            <button class="send-btn" id="teacher-send-btn" aria-label="Send">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Attendance                            -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-attendance">
+                <h2 class="panel-title">✅ Attendance Panel</h2>
+                <p class="panel-subtitle">Date-wise student attendance records pulled from Firestore.</p>
+
+                <!-- Summary cards -->
+                <div class="info-cards">
+                    <div class="info-card">
+                        <div class="info-card-label">Total Classes</div>
+                        <div class="info-card-value">12</div>
+                        <div class="info-card-sub">this month</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Avg Attendance</div>
+                        <div class="info-card-value">82%</div>
+                        <div class="info-card-sub">across all students</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-card-label">Below 75%</div>
+                        <div class="info-card-value" style="color:var(--color-danger)">3</div>
+                        <div class="info-card-sub">students at risk</div>
+                    </div>
+                </div>
+
+                <!-- Attendance Table -->
+                <div class="panel-card" style="overflow-x:auto">
+                    <h3>📋 Student Attendance Records</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Days Present</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-tbody">
+                            <!-- Populated by dashboard.js -->
+                            <tr>
+                                <td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">Loading
+                                    records…</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Syllabus Management                   -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-syllabus">
+                <h2 class="panel-title">📚 Syllabus Management</h2>
+                <p class="panel-subtitle">Add topics, mark them complete, and keep track of the curriculum.</p>
+
+                <!-- Add topic form -->
+                <div class="panel-card">
+                    <h3>➕ Add New Topic</h3>
+                    <form id="syllabus-form" style="display:flex;gap:12px;flex-wrap:wrap">
+                        <input type="text" id="topic-input"
+                            placeholder="Enter topic name (e.g. Cell Biology, Algebra Basics…)"
+                            style="flex:1;min-width:220px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--border-color);background:var(--input-bg);color:var(--text-primary);font-size:0.9rem;font-family:inherit;outline:none;"
+                            required />
+                        <button type="submit" class="btn btn-primary" id="add-topic-btn">Add Topic</button>
+                    </form>
+                </div>
+
+                <!-- Syllabus list -->
+                <div class="panel-card" style="margin-top:0">
+                    <h3>📋 Curriculum Topics <small style="font-weight:500;color:var(--text-muted)">(click ✓ to mark
+                            complete)</small></h3>
+                    <div id="syllabus-list"></div>
+                    <!-- Populated by dashboard.js -->
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Exam Schedule                         -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-exams">
+                <h2 class="panel-title">📝 Exam Schedule</h2>
+                <p class="panel-subtitle">Add upcoming exams and keep students informed.</p>
+
+                <!-- Add exam form -->
+                <div class="panel-card">
+                    <h3>➕ Schedule New Exam</h3>
+                    <form id="exam-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="exam-subject">Exam / Test Name</label>
+                                <input type="text" id="exam-subject" placeholder="e.g. Mid-Term Exam" required />
+                            </div>
+                            <div class="form-group">
+                                <label for="exam-date">Exam Date</label>
+                                <input type="date" id="exam-date" required />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exam-syllabus">Syllabus / Topics Covered</label>
+                            <input type="text" id="exam-syllabus" placeholder="e.g. Chapters 1–4, Full Syllabus" />
+                        </div>
+                        <button type="submit" class="btn btn-accent" id="add-exam-btn">📅 Add to Schedule</button>
+                    </form>
+                </div>
+
+                <!-- Exam list -->
+                <div class="panel-card" style="margin-top:0">
+                    <h3>📆 Upcoming Exams</h3>
+                    <div id="exam-list">
+                        <!-- Populated by dashboard.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ════════════════════════════════════════════ -->
+            <!--  PANEL: Student Chat                          -->
+            <!-- ════════════════════════════════════════════ -->
+            <section class="panel" id="panel-chat">
+                <h2 class="panel-title">💬 Student Chat</h2>
+                <p class="panel-subtitle">Read and respond to student doubts and questions in real time.</p>
+
+                <div class="standalone-chat">
+                    <div class="chat-header" style="padding:16px 20px;font-size:0.95rem">
+                        📨 All Student Messages
+                    </div>
+                    <div class="chat-messages" id="teacher-chat-messages-2" style="max-height:500px">
+                        <div class="chat-msg received">
+                            <strong>Aarav:</strong> When will the next session be?<div class="msg-time">10:30 AM</div>
+                        </div>
+                        <div class="chat-msg sent">
+                            Tomorrow at 3PM! Topic: Cell Division Part 2. 🔬<div class="msg-time">10:35 AM</div>
+                        </div>
+                        <div class="chat-msg received">
+                            <strong>Priya:</strong> Can you share the notes for Chapter 2?<div class="msg-time">11:00 AM
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-row" style="padding:16px">
+                        <input type="text" id="teacher-reply-input" placeholder="Reply to students…"
+                            autocomplete="off" />
+                        <button class="send-btn" id="teacher-reply-send" aria-label="Send">➤</button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script>
+        // ── Bootstrap teacher dashboard ───────────────────────────
+        initTeacherDashboard();
+
+        // ── Copy join code to clipboard ────────────────────────────
+        function copyCode() {
+            var code = document.getElementById('join-code-value').textContent;
+            if (navigator.clipboard && code !== '——') {
+                navigator.clipboard.writeText(code).then(function () {
+                    var btn = document.getElementById('copy-btn');
+                    btn.textContent = '✅ Copied!';
+                    setTimeout(function () { btn.textContent = '📋 Copy Code'; }, 2000);
+                });
+            }
+        }
+
+        // ── Session toggle ──────────────────────────────────────────
+        var sessionActive = false;
+        function toggleSession(btn) {
+            sessionActive = !sessionActive;
+            btn.textContent = sessionActive ? '⏸ Session Live' : '▶ Start Session';
+            btn.style.background = sessionActive ? 'var(--color-accent)' : '';
+            document.getElementById('end-session-btn').disabled = !sessionActive;
+            showToast(sessionActive ? '🚀 Session started! Students can now join.' : '⏹ Session ended.');
+        }
+
+        // ── Second chat panel (student chat tab) simple handler ────
+        document.addEventListener('DOMContentLoaded', function () {
+            var input = document.getElementById('teacher-reply-input');
+            var btn = document.getElementById('teacher-reply-send');
+            var msgs = document.getElementById('teacher-chat-messages-2');
+
+            function send() {
+                var text = (input ? input.value || '' : '').trim();
+                if (!text || !msgs) return;
+                var div = document.createElement('div');
+                div.className = 'chat-msg sent';
+                div.innerHTML = text + '<div class="msg-time">Now</div>';
+                msgs.appendChild(div);
+                msgs.scrollTop = msgs.scrollHeight;
+                if (input) input.value = '';
+            }
+
+            if (btn) btn.addEventListener('click', send);
+            if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') send(); });
+        });
+    </script>
+</body>
+
+</html>
